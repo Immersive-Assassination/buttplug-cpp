@@ -5,12 +5,11 @@
 #include <condition_variable>
 #include <thread>
 
-#define ASIO_STANDALONE
-#include <websocketpp/config/asio_no_tls_client.hpp>
-#include <websocketpp/client.hpp>
-
-typedef websocketpp::client<websocketpp::config::asio_client> ws_client;
-typedef websocketpp::config::asio_client::message_type::ptr ws_message_ptr;
+#ifndef WSCONN
+class ws_client;
+struct ws_message_ptr;
+#endif
+typedef std::weak_ptr<void> ws_connection_hdl;
 
 namespace Buttplug {
     class Connector {
@@ -34,10 +33,10 @@ namespace Buttplug {
         virtual bool Connected();
     private:
         std::string _address;
-        ws_client _client;
-        websocketpp::connection_hdl _connection;
-        websocketpp::lib::shared_ptr<websocketpp::lib::thread> _thread;
+        ws_client* _client;
+		ws_connection_hdl _connection;
+        std::shared_ptr<std::thread> _thread;
 
-        void on_message(websocketpp::connection_hdl hdl, ws_message_ptr msg);
+        void on_message(ws_connection_hdl hdl, ws_message_ptr msg);
     };
 }
