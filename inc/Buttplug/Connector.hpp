@@ -15,9 +15,10 @@ typedef websocketpp::config::asio_client::message_type::ptr ws_message_ptr;
 namespace Buttplug {
     class Connector {
     public:
-        virtual void Connect() = 0;
-        virtual void Disconnect() = 0;
-        virtual void Send(std::string message) = 0;
+        virtual ~Connector() {};
+        virtual bool Connect() = 0;
+        virtual bool Disconnect() = 0;
+        virtual bool Send(std::string message) = 0;
         virtual bool Connected() = 0;
 
         std::function<void(std::string)> _callback;
@@ -26,7 +27,7 @@ namespace Buttplug {
     class WebsocketConnector : public Connector {
     public:
         WebsocketConnector(std::string address);
-        ~WebsocketConnector();
+        virtual ~WebsocketConnector();
         virtual bool Connect();
         virtual bool Disconnect();
         virtual bool Send(std::string message);

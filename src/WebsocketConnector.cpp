@@ -66,6 +66,8 @@ bool WebsocketConnector::Connect() {
     } catch (websocketpp::exception const & e) {
         std::cout << e.what() << std::endl;
     }
+
+    return false;
 }
 
 bool WebsocketConnector::Disconnect() {

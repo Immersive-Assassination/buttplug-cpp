@@ -61,12 +61,9 @@ void Device::Stop() {
 
 
 void ScalarActuator::Command(float scalar) {
-    auto m = Messages::ScalarCmd();
-    m.DeviceIndex = this->device->DeviceIndex;
-    m.Scalars.push_back(Messages::_Scalar(
-        this->index,
-        scalar,
-        this->ActuatorType
-    ));
-    this->device->Send(m);
+    auto m = Messages::ScalarCmd(
+        this->device->DeviceIndex,
+        { Messages::_Scalar(this->index, scalar, this->ActuatorType), }
+    );
+    this->device->Send(m, false);
 }

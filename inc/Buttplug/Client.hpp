@@ -18,7 +18,7 @@ namespace Buttplug {
 
         Messages::Incoming* Send(Messages::Outgoing& message, bool wait = true);
         void Connect(Connector* connector);
-        inline void Connected() {
+        inline bool Connected() {
             return connector != nullptr && connector->Connected();
         }
         void Disconnect();
