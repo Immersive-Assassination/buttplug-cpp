@@ -7,6 +7,7 @@
 #include "Buttplug/Connector.hpp"
 #include "Buttplug/Device.hpp"
 #include "Buttplug/Messages.hpp"
+#include "Buttplug/DeviceParts.hpp"
 
 
 namespace Buttplug {

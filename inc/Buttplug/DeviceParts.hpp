@@ -1,5 +1,11 @@
-#include <string>
+#pragma once
 
+#include <string>
+#include <map>
+#include <functional>
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace Buttplug {
     class Device;

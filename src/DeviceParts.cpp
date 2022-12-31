@@ -1,4 +1,8 @@
 #include "Buttplug/DeviceParts.hpp"
+#include "Buttplug/Messages.hpp"
+#include "Buttplug/Device.hpp"
+
+using namespace Buttplug;
 
 void ScalarActuator::Command(float scalar) {
     auto m = Messages::ScalarCmd(
