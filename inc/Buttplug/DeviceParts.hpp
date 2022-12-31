@@ -11,11 +11,6 @@ namespace Buttplug {
         Device* device;
         int index;
         std::string description;
-
-        friend void from_json(const json& j, DevicePart*) {
-
-        }
-
     };
 
     class Actuator : public DevicePart {

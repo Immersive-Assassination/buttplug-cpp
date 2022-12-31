@@ -1,5 +1,6 @@
 #include "Buttplug/Device.hpp"
 #include "Buttplug/Client.hpp"
+#include "Buttplug/DeviceParts.hpp"
 
 using namespace Buttplug;
 
@@ -41,7 +42,7 @@ Device* Device::from_json(json& j) {
                 auto desc = element.at("FeatureDescriptor").get<std::string>();
                 auto actuator_type = element.at("ActuatorType").get<std::string>();
                 auto step_count =element.at("StepCount").get<int>();
-                e->ScalarActuators.push_back(ScalarActuator(e, i, desc, actuator_type, step_count));
+                e->ScalarActuators.push_back(new ScalarActuator(e, i, desc, actuator_type, step_count));
                 i++;
             }
         }
@@ -59,11 +60,3 @@ void Device::Stop() {
     this->client->Send(m, false);
 }
 
-
-void ScalarActuator::Command(float scalar) {
-    auto m = Messages::ScalarCmd(
-        this->device->DeviceIndex,
-        { Messages::_Scalar(this->index, scalar, this->ActuatorType), }
-    );
-    this->device->Send(m, false);
-}

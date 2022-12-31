@@ -1,4 +1,5 @@
 #include <Buttplug/Client.hpp>
+#include <unistd.h>
 
 
 int main() {

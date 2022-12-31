@@ -1,5 +1,5 @@
-#include "Buttplug/Messages.hpp"
 #include "Buttplug/Device.hpp"
+#include "Buttplug/Messages.hpp"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -18,12 +18,26 @@ void Outgoing::serialize(json& j) {
     this->inner_json(j[this->Name()]);
 }
 
+void Outgoing::inner_json(json& j) {
+	j = json{
+		{"Id", this->Id},
+	};
+}
+
 Error* Error::from_json(json& j) {
     auto e = new Error;
     j.at("Id").get_to(e->Id);
     j.at("ErrorMessage").get_to(e->ErrorMessage);
     j.at("ErrorCode").get_to(e->ErrorCode);
     return e;
+}
+
+void RequestServerInfo::inner_json(json& j) {
+	j = json{
+		{"Id", this->Id},
+		{"ClientName", this->ClientName},
+		{"MessageVersion", this->MessageVersion},
+	};
 }
 
 ServerInfo* ServerInfo::from_json(json& j) {
@@ -46,7 +60,7 @@ DeviceList* DeviceList::from_json(json& j) {
 
 DeviceAdded* DeviceAdded::from_json(json& j) {
     auto e = new DeviceAdded;
-    e->Device = Buttplug::Device::from_json(j);
+    e->_Device = Buttplug::Device::from_json(j);
     return e;
 }
 
@@ -57,6 +71,20 @@ DeviceRemoved* DeviceRemoved::from_json(json& j) {
     return e;
 }
 
+void StopDeviceCmd::inner_json(json& j) {
+	j = json{
+		{"Id", this->Id},
+		{"DeviceIndex", this->DeviceIndex},
+	};
+}
+
+void ScalarCmd::inner_json(json& j) {
+	j = json{
+		{"Id", this->Id},
+		{"DeviceIndex", this->DeviceIndex},
+		{"Scalars", this->Scalars},
+	};
+}
 
 #define MM(x) {#x, x::from_json}
 

@@ -3,16 +3,22 @@
 #include <vector>
 #include <string>
 
-#include "Buttplug/Messages.hpp"
-
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 
 namespace Buttplug {
     class Client;
 
     class Actuator;
+    class ScalarActuator;
     class LinearActuator;
     class RotatoryActuator;
+
+    namespace Messages {
+        class Incoming;
+        class Outgoing;
+    }
     //class Sensor;
 
     class Device {
@@ -28,9 +34,9 @@ namespace Buttplug {
         int DeviceMessageGap;
         std::string DeviceDisplayName;
 
-        std::vector<ScalarActuator> ScalarActuators;
-        std::vector<LinearActuator> LinearActuators;
-        std::vector<RotatoryActuator> RotatryActuators;
+        std::vector<ScalarActuator*> ScalarActuators;
+        std::vector<LinearActuator*> LinearActuators;
+        std::vector<RotatoryActuator*> RotatryActuators;
         //std::vector<Sensor> _sensors;
     };
 }

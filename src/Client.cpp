@@ -90,7 +90,7 @@ namespace Buttplug {
                     // server sent event
                     if(m->Name() == "DeviceAdded") {
                         auto add = static_cast<Messages::DeviceAdded*>(m);
-                        auto dev = add->Device;
+                        auto dev = add->_Device;
                         bool exists = Devices.find(dev->DeviceIndex) != Devices.end();
                         if(exists) {
                             delete Devices.at(dev->DeviceIndex);

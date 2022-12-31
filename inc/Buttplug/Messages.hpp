@@ -4,11 +4,9 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-#include "Buttplug/DeviceParts.hpp"
-
 
 namespace Buttplug {
-    enum class ErrorCode {
+    enum class EErrorCode {
         ERROR_UNKNOWN,
         ERROR_INIT,
         ERROR_PING,
@@ -33,11 +31,7 @@ namespace Buttplug {
         public:
             void serialize(json& j);
         private:
-            virtual void inner_json(json& j) {
-                j = json{
-                    {"Id", this->Id},
-                };
-            };
+            virtual void inner_json(json& j);
         };
 
 
@@ -51,11 +45,10 @@ namespace Buttplug {
         public:
             Error() {};
             M("Error");
+            static Error* from_json(json& j);
 
             std::string ErrorMessage;
-            ErrorCode ErrorCode;
-
-            static Error* from_json(json& j);
+            EErrorCode ErrorCode;
         };
 
         class RequestServerInfo : public Outgoing {
@@ -63,29 +56,21 @@ namespace Buttplug {
             RequestServerInfo(std::string ClientName, int MessageVersion) :
                 ClientName(ClientName), MessageVersion(MessageVersion) {};
             M("RequestServerInfo");
+            void inner_json(json& j);
            
             std::string ClientName;
             int MessageVersion;
-
-            void inner_json(json& j) {
-                j = json{
-                    {"Id", this->Id},
-                    {"ClientName", this->ClientName},
-                    {"MessageVersion", this->MessageVersion},
-                };
-            }
         };
 
         class ServerInfo : public Incoming {
         public:
             ServerInfo() {};
             M("ServerInfo");
+            static ServerInfo* from_json(json& j);
 
             std::string ServerName;
             int MessageVersion;
             int MaxPingTime;
-
-            static ServerInfo* from_json(json& j);
         };
 
 
@@ -127,19 +112,18 @@ namespace Buttplug {
         public:
             DeviceAdded() {};
             M("DeviceAdded");
-           
-            Device* Device;
             static DeviceAdded* from_json(json& j);
+           
+            Device* _Device;
         };
 
         class DeviceRemoved : public Incoming {
         public:
             DeviceRemoved() {};
             M("DeviceRemoved");
+            static DeviceRemoved* from_json(json& j);
 
             int DeviceIndex;
-
-            static DeviceRemoved* from_json(json& j);
         };
 
 
@@ -147,15 +131,9 @@ namespace Buttplug {
         public:
             StopDeviceCmd(int index) : DeviceIndex(index) {};
             M("StopDeviceCmd");
+            void inner_json(json& j);
            
-            int DeviceIndex;
-
-            void inner_json(json& j) {
-                j = json{
-                    {"Id", this->Id},
-                    {"DeviceIndex", this->DeviceIndex},
-                };
-            }
+            int DeviceIndex;            
         };
 
         class StopAllDevices : public Outgoing {
@@ -179,17 +157,10 @@ namespace Buttplug {
             M("ScalarCmd");
             ScalarCmd(int DeviceIndex, std::vector<_Scalar> Scalars) :
                 DeviceIndex(DeviceIndex), Scalars(Scalars) {};
+            void inner_json(json& j);
 
             int DeviceIndex;
             std::vector<_Scalar> Scalars;
-
-            void inner_json(json& j) {
-                j = json{
-                    {"Id", this->Id},
-                    {"DeviceIndex", this->DeviceIndex},
-                    {"Scalars", this->Scalars},
-                };
-            }
         };
 
         const extern std::map<std::string, std::function<Buttplug::Messages::Incoming*(json&)>> _message_map;
