@@ -19,6 +19,6 @@ include(CPack)
 
 project(test-app)
 
-add_executable(test-app test.cpp)
+add_executable(test-app EXCLUDE_FROM_ALL test.cpp)
 target_link_libraries(test-app buttplug-cpp)
 
