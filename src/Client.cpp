@@ -5,10 +5,10 @@ using json = nlohmann::json;
 namespace Buttplug {
     class _reply_wait {
     public:
-        _reply_wait(int Id) : Id(Id), lk(cv_m), reply(nullptr) {}
+        _reply_wait(int Id, bool wait) : Id(Id), lk(cv_m), reply(nullptr), wait(wait) {}
 
         inline Messages::Incoming* Wait() {
-            if(reply == nullptr) {
+            if(reply == nullptr && wait) {
                 cv.wait(lk);
             };
             return reply;
@@ -25,18 +25,15 @@ namespace Buttplug {
         std::mutex cv_m;
         std::unique_lock<std::mutex> lk;
         Messages::Incoming* reply;
+        bool wait;
     };
 
 
-    Client::Client(std::string name)  {
-        _name = name;
-        _last_id = 0;
-    }
+    Client::Client(std::string name) :
+        connector(nullptr), _name(name), _last_id(0) {}
 
     void Client::Connect(Connector* connector) {
-        if(this->connector) {
-            this->Disconnect();
-        }
+        this->Disconnect();
         this->connector = connector;
         this->connector->_callback = std::bind(&Client::_handle_message, this, std::placeholders::_1);
         this->connector->Connect();
@@ -54,9 +51,11 @@ namespace Buttplug {
     }
 
     void Client::Disconnect() {
-        this->connector->Disconnect();
-        delete this->connector;
-        this->connector = nullptr;
+        if(this->connector) {
+            this->connector->Disconnect();
+            delete this->connector;
+            this->connector = nullptr;
+        }
     }
 
     void Client::StartScanning() {
@@ -125,14 +124,9 @@ namespace Buttplug {
         auto s = j.dump();
         printf("sending: %s\n", s.c_str());
 
-        auto w = new _reply_wait(message.Id);
+        auto w = new _reply_wait(message.Id, wait);
         _waiting[message.Id] = w;
         this->connector->Send(s);
-        if(wait) {
-            auto reply = w->Wait();
-            return reply;
-        } else {
-            return nullptr;
-        }
+        return w->Wait();
     }
 }

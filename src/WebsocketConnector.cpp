@@ -14,9 +14,9 @@ void Buttplug::WebsocketConnector::on_message(websocketpp::connection_hdl hdl, w
 WebsocketConnector::WebsocketConnector(std::string address) {
     _address = address;
     try {
-        _client.set_access_channels(websocketpp::log::alevel::all);
-        _client.clear_access_channels(websocketpp::log::alevel::frame_payload);
-        _client.set_error_channels(websocketpp::log::elevel::all);
+        _client.set_access_channels(websocketpp::log::alevel::none);
+        //_client.clear_access_channels(websocketpp::log::alevel::frame_payload);
+        //_client.set_error_channels(websocketpp::log::elevel::all);
         _client.init_asio();
         _client.set_message_handler(std::bind(&WebsocketConnector::on_message, this, std::placeholders::_1, std::placeholders::_2));
         _client.start_perpetual();

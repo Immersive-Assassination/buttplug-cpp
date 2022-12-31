@@ -26,11 +26,7 @@ namespace Buttplug {
 
         class Incoming : public Message {
         public:
-            static Incoming* from_json(json& j) {
-                auto e = new Incoming;
-                j.at("Id").get_to(e->Id);
-                return e;
-            }
+            static Incoming* from_json(json& j);
         };
 
         class Outgoing : public Message {
@@ -59,13 +55,7 @@ namespace Buttplug {
             std::string ErrorMessage;
             ErrorCode ErrorCode;
 
-            static Error* from_json(json& j) {
-                auto e = new Error;
-                j.at("Id").get_to(e->Id);
-                j.at("ErrorMessage").get_to(e->ErrorMessage);
-                j.at("ErrorCode").get_to(e->ErrorCode);
-                return e;
-            }
+            static Error* from_json(json& j);
         };
 
         class RequestServerInfo : public Outgoing {
@@ -95,14 +85,7 @@ namespace Buttplug {
             int MessageVersion;
             int MaxPingTime;
 
-            static ServerInfo* from_json(json& j) {
-                auto e = new ServerInfo;
-                j.at("Id").get_to(e->Id);
-                j.at("ServerName").get_to(e->ServerName);
-                j.at("MessageVersion").get_to(e->MessageVersion);
-                j.at("MaxPingTime").get_to(e->MaxPingTime);
-                return e;
-            }
+            static ServerInfo* from_json(json& j);
         };
 
 
@@ -156,12 +139,7 @@ namespace Buttplug {
 
             int DeviceIndex;
 
-            static DeviceRemoved* from_json(json& j) {
-                auto e = new DeviceRemoved;
-                j.at("Id").get_to(e->Id);
-                j.at("DeviceIndex").get_to(e->DeviceIndex);
-                return e;
-            }
+            static DeviceRemoved* from_json(json& j);
         };
 
 
